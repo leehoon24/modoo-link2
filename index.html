@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모두의 링크 — 동네 기반 공동창업자 매칭 & 원스톱 통합 플랫폼</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root{
+    --karrot:#ff7e36;
+    --karrot-dark:#e96a23;
+    --gov:#004ea2;
+    --gov-dark:#003c7e;
+  }
+  *{ -webkit-tap-highlight-color: transparent; }
+  body{ font-family:'Pretendard','Apple SD Gothic Neo',sans-serif; }
+  html{ scroll-behavior:smooth; }
+  .karrot-color{ color:var(--karrot); }
+  .karrot-bg{ background-color:var(--karrot); }
+  .gov-color{ color:var(--gov); }
+  .gov-bg{ background-color:var(--gov); }
+
+  /* 인라인 아이콘 기본 크기 */
+  .ic{ width:1em; height:1em; display:inline-block; vertical-align:-0.125em; flex-shrink:0; }
+
+  .hero-mesh{
+    background:
+      radial-gradient(60% 70% at 12% 8%, rgba(255,126,54,.12) 0%, transparent 60%),
+      radial-gradient(55% 60% at 92% 18%, rgba(0,78,162,.12) 0%, transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+  .grid-lines{
+    background-image:
+      linear-gradient(to right, rgba(15,23,42,.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15,23,42,.04) 1px, transparent 1px);
+    background-size:44px 44px;
+  }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+  .reveal.d1{ transition-delay:.08s; }
+  .reveal.d2{ transition-delay:.16s; }
+  .reveal.d3{ transition-delay:.24s; }
+
+  .shadow-soft{ box-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12); }
+  .shadow-phone{ box-shadow:0 30px 60px -20px rgba(15,23,42,.45); }
+  .notch{ width:118px; height:26px; }
+
+  .nav-btn{ background:none; border:none; cursor:pointer; font:inherit; }
+  section[id]{ scroll-margin-top:72px; }
+  #top{ scroll-margin-top:0; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body class="bg-white text-slate-800 antialiased">
+<span id="top" aria-hidden="true"></span>
+
+<!-- ============ SVG 아이콘 정의 (인라인 내장) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="base"></g>
+  </defs>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/>
+  </symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21s-6-5.686-6-10a6 6 0 0 1 12 0c0 4.314-6 10-6 10Z"/><circle cx="12" cy="11" r="2.5"/>
+  </symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="2.5"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>
+  </symbol>
+  <symbol id="i-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="2" width="14" height="20" rx="2.5"/><circle cx="12" cy="18" r="0.6" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+  </symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="5"/><path d="M8.21 13.89 7 22l5-3 5 3-1.21-8.11"/>
+  </symbol>
+  <symbol id="i-user-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.5 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="7.75" cy="7" r="4"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/>
+  </symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  </symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+  </symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/>
+  </symbol>
+  <symbol id="i-fingerprint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5.5 13.5C5 12.8 5 12 5 11a7 7 0 0 1 13-3.6"/><path d="M8 11a4 4 0 0 1 8 0c0 3-.5 5.5-1 7.5"/><path d="M11.5 10.8a2 2 0 0 0-1.5 1.9c0 1.5.5 3.3.5 4.8"/><path d="M14.5 12.5c0 2.5-.5 5-1 6.8"/>
+  </symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 3 1.9 4.1L18 9l-4.1 1.9L12 15l-1.9-4.1L6 9l4.1-1.9Z"/><path d="M18.5 14.5l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8Z"/>
+  </symbol>
+  <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><circle cx="7" cy="7.5" r="0.7" fill="currentColor" stroke="none"/><circle cx="7" cy="16.5" r="0.7" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v18"/><path d="M7 7h10"/><path d="m7 7-3 6a3 3 0 0 0 6 0Z"/><path d="m17 7-3 6a3 3 0 0 0 6 0Z"/><path d="M6 21h12"/>
+  </symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="9" cy="9" r="6"/><path d="M15.5 6.1A6 6 0 1 1 14.2 17.8"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r="0.6" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+  </symbol>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between gap-4">
+    <button onclick="goTop()" class="nav-btn flex items-center gap-2 shrink-0">
+      <span class="w-9 h-9 rounded-xl karrot-bg flex items-center justify-center text-white">
+        <svg class="ic w-4 h-4"><use href="#i-link"/></svg>
+      </span>
+      <span class="text-lg font-black text-slate-900 tracking-tight">모두의 링크</span>
+      <span class="hidden sm:inline text-[11px] font-semibold text-slate-400">Modoo Link</span>
+    </button>
+    <nav class="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
+      <button onclick="scrollToId('problem')" class="nav-btn hover:text-slate-900 transition-colors">문제</button>
+      <button onclick="scrollToId('solution')" class="nav-btn hover:text-slate-900 transition-colors">해결 방식</button>
+      <button onclick="scrollToId('demo')" class="nav-btn hover:text-slate-900 transition-colors">서비스 미리보기</button>
+      <button onclick="scrollToId('process')" class="nav-btn hover:text-slate-900 transition-colors">행정 연계</button>
+      <button onclick="scrollToId('impact')" class="nav-btn hover:text-slate-900 transition-colors">기대효과</button>
+    </nav>
+    <button onclick="scrollToId('solution')" class="shrink-0 gov-bg hover:bg-[var(--gov-dark)] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors">
+      제안 살펴보기
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section id="hero" class="hero-mesh relative overflow-hidden">
+    <div class="absolute inset-0 grid-lines opacity-60"></div>
+    <div class="relative max-w-6xl mx-auto px-5 pt-16 pb-20 lg:pt-24 lg:pb-28">
+      <div class="flex flex-wrap items-center gap-2 mb-7 reveal">
+        <span class="gov-bg text-white text-xs font-bold px-3 py-1.5 rounded-full">중소벤처기업부 제안 과제</span>
+        <span class="bg-orange-50 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full border border-orange-100">
+          「모두의 창업」 고도화 아이디어
+        </span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.12] tracking-tight reveal d1">
+        팀이 없어서 무너지는 창업,<br>
+        <span class="relative inline-block">
+          <span class="karrot-color">이제 그만.</span>
+          <svg class="absolute -bottom-2 left-0 w-full" height="10" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 7 Q 50 1 100 5 T 198 4" stroke="var(--karrot)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </h1>
+
+      <p class="mt-8 text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl reveal d2">
+        동네 기반 공동창업자 매칭부터 정부 자문 연계까지, 한 곳에서.<br class="hidden sm:block">
+        <strong class="text-slate-800">당근마켓의 위치 인증</strong>과 <strong class="text-slate-800">정부 '도전 경력증명서'</strong>를 엮어
+        만든 대한민국 표준 공동창업 빌더입니다.
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-3 reveal d3">
+        <button onclick="scrollToId('demo')" class="karrot-bg hover:bg-[var(--karrot-dark)] text-white font-bold px-6 py-3.5 rounded-xl shadow-soft transition-colors flex items-center gap-2">
+          <svg class="ic w-5 h-5"><use href="#i-phone"/></svg> 서비스 미리보기
+        </button>
+        <button onclick="scrollToId('process')" class="bg-white hover:bg-slate-50 text-slate-800 font-bold px-6 py-3.5 rounded-xl border border-slate-200 transition-colors flex items-center gap-2">
+          <svg class="ic w-5 h-5 gov-color"><use href="#i-flow"/></svg> 행정 연계 구조 보기
+        </button>
+      </div>
+
+      <div class="mt-12 flex flex-wrap gap-4 text-sm reveal d3">
+        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur px-4 py-2.5 rounded-xl border border-slate-200">
+          <svg class="ic w-5 h-5 karrot-color"><use href="#i-pin"/></svg>
+          <div>
+            <div class="font-bold text-slate-800 text-[13px]">로컬 인증</div>
+            <div class="text-[11px] text-slate-500">당근 LBS 위치 검증 연동</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur px-4 py-2.5 rounded-xl border border-slate-200">
+          <svg class="ic w-5 h-5 gov-color"><use href="#i-shield"/></svg>
+          <div>
+            <div class="font-bold text-slate-800 text-[13px]">정부 공인</div>
+            <div class="text-[11px] text-slate-500">도전 경력증명서 실시간 연계</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur px-4 py-2.5 rounded-xl border border-slate-200">
+          <svg class="ic w-5 h-5 text-emerald-600"><use href="#i-handshake"/></svg>
+          <div>
+            <div class="font-bold text-slate-800 text-[13px]">원스톱 자문</div>
+            <div class="text-[11px] text-slate-500">법률·세무 전문가 무상 연계</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROBLEM ================= -->
+  <section id="problem" class="bg-slate-900 text-slate-200 py-20 lg:py-28">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="max-w-2xl reveal">
+        <span class="text-xs font-bold tracking-widest text-orange-400 uppercase">The Problem</span>
+        <h2 class="mt-3 text-3xl lg:text-4xl font-black text-white leading-tight">
+          창업을 무너뜨리는 건<br>아이템이 아니라 <span class="karrot-color">'함께할 사람'</span> 입니다.
+        </h2>
+        <p class="mt-5 text-slate-400 leading-relaxed">
+          초기 스타트업 실패 원인 분석에서 '팀·공동창업자 문제'는 자금 부족과 함께 늘 최상위로 꼽힙니다.
+          좋은 아이디어를 가진 도전자도 곁에 맞는 동업자가 없으면 시작조차 못 합니다.
+        </p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="reveal d1 bg-slate-800/60 border border-slate-700 rounded-2xl p-6">
+          <svg class="ic w-7 h-7 text-orange-400 mb-4"><use href="#i-user-x"/></svg>
+          <h3 class="font-bold text-white text-lg mb-2">사람을 못 찾는다</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            기획자는 개발자를, 개발자는 사업가를 찾지만 검증된 만남의 통로가 없습니다.
+            지인 소개에 의존하거나, 온라인에서 신원도 모른 채 위험을 감수합니다.
+          </p>
+        </div>
+        <div class="reveal d2 bg-slate-800/60 border border-slate-700 rounded-2xl p-6">
+          <svg class="ic w-7 h-7 text-orange-400 mb-4"><use href="#i-alert"/></svg>
+          <h3 class="font-bold text-white text-lg mb-2">믿을 수가 없다</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            경력은 부풀려지고 신원은 불투명합니다. 잘못된 동업은 곧바로 지분 분쟁과
+            사업 중단으로 이어져, 초기 팀이 가장 흔히 무너지는 지점이 됩니다.
+          </p>
+        </div>
+        <div class="reveal d3 bg-slate-800/60 border border-slate-700 rounded-2xl p-6">
+          <svg class="ic w-7 h-7 text-orange-400 mb-4"><use href="#i-file"/></svg>
+          <h3 class="font-bold text-white text-lg mb-2">행정이 가로막는다</h3>
+          <p class="text-sm text-slate-400 leading-relaxed">
+            팀을 꾸려도 계약서·확인서 등 서류와 자문 절차가 복잡합니다.
+            제품에 집중해야 할 극초기 팀이 행정 부담에 발이 묶입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SOLUTION ================= -->
+  <section id="solution" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-xs font-bold tracking-widest gov-color uppercase">The Solution</span>
+        <h2 class="mt-3 text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
+          세 가지를 하나로 묶었습니다
+        </h2>
+        <p class="mt-5 text-slate-600 leading-relaxed">
+          이미 검증된 세 모델의 강점을 결합해, 만남부터 행정까지 끊김 없이 이어지는
+          공동창업 경로를 만듭니다.
+        </p>
+      </div>
+
+      <div class="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="reveal d1 rounded-2xl border border-slate-200 p-7 hover:border-orange-300 hover:shadow-soft transition-all">
+          <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mb-5">
+            <svg class="ic w-6 h-6 karrot-color"><use href="#i-target"/></svg>
+          </div>
+          <div class="text-[11px] font-bold text-orange-500 mb-1">당근마켓 · LBS</div>
+          <h3 class="font-bold text-slate-900 text-lg mb-2">가까이 사는 사람부터</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            내 활동지 반경 안에서 실제로 자주 만날 수 있는 동업자를 우선 추천합니다.
+            GPS 좌표 대조로 동네를 인증해, 거리로 인한 소통 단절을 줄입니다.
+          </p>
+        </div>
+        <div class="reveal d2 rounded-2xl border border-slate-200 p-7 hover:border-orange-300 hover:shadow-soft transition-all">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-5">
+            <svg class="ic w-6 h-6 gov-color"><use href="#i-users"/></svg>
+          </div>
+          <div class="text-[11px] font-bold gov-color mb-1">Y Combinator 방식</div>
+          <h3 class="font-bold text-slate-900 text-lg mb-2">궁합까지 맞춰서</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            전문 분야·역할·창업 단계·성향을 분석해 보완 관계의 파트너를 매칭합니다.
+            같은 사람만 모이지 않도록, 서로 빈 곳을 채우는 조합을 우선합니다.
+          </p>
+        </div>
+        <div class="reveal d3 rounded-2xl border border-slate-200 p-7 hover:border-orange-300 hover:shadow-soft transition-all">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-5">
+            <svg class="ic w-6 h-6 text-emerald-600"><use href="#i-award"/></svg>
+          </div>
+          <div class="text-[11px] font-bold text-emerald-600 mb-1">정부 · 도전 경력증명서</div>
+          <h3 class="font-bold text-slate-900 text-lg mb-2">믿을 수 있게</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            정부의 도전 경력증명서 데이터와 연계해 참여 이력·멘토링 이수를 검증합니다.
+            허위 경력과 어뷰징을 사전에 걸러, 신뢰할 수 있는 매칭을 만듭니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DEMO (PHONE) ================= -->
+  <section id="demo" class="py-20 lg:py-28 bg-slate-50 border-y border-slate-200">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+        <div class="reveal order-2 lg:order-1">
+          <span class="text-xs font-bold tracking-widest karrot-color uppercase">Preview</span>
+          <h2 class="mt-3 text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
+            앱에서는<br>이렇게 작동합니다
+          </h2>
+          <p class="mt-5 text-slate-600 leading-relaxed">
+            상단 탭을 눌러 두 화면을 직접 둘러보세요. 프로필을 설정하면, 내 동네와
+            관심 분야에 맞는 검증된 파트너가 피드로 추천됩니다.
+          </p>
+
+          <ul class="mt-8 space-y-4">
+            <li class="flex gap-3.5">
+              <span class="shrink-0 w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center karrot-color"><svg class="ic w-4 h-4"><use href="#i-settings"/></svg></span>
+              <div>
+                <div class="font-bold text-slate-900 text-[15px]">프로필 설정</div>
+                <p class="text-sm text-slate-600">전문 분야, 동네 인증, 창업 아이디어 상태, 정부 경력증명서를 한 번에 등록합니다.</p>
+              </div>
+            </li>
+            <li class="flex gap-3.5">
+              <span class="shrink-0 w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center karrot-color"><svg class="ic w-4 h-4"><use href="#i-users"/></svg></span>
+              <div>
+                <div class="font-bold text-slate-900 text-[15px]">파트너 피드</div>
+                <p class="text-sm text-slate-600">탐색 반경과 관심 태그를 조절하면, AI 궁합도와 검증 배지가 붙은 파트너가 가까운 순으로 보입니다.</p>
+              </div>
+            </li>
+          </ul>
+          <p class="mt-6 text-[12px] text-slate-400 flex items-center gap-1.5">
+            <svg class="ic w-3.5 h-3.5"><use href="#i-info"/></svg> 화면 속 인물·수치는 시연용 예시입니다.
+          </p>
+        </div>
+
+        <div class="order-1 lg:order-2 flex flex-col items-center reveal d1">
+          <div class="mb-5 flex bg-slate-200 p-1 rounded-xl w-full max-w-[300px]">
+            <button onclick="switchScreen(1)" id="tab-screen1" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1">
+              <svg class="ic w-3.5 h-3.5"><use href="#i-settings"/></svg> 프로필 설정
+            </button>
+            <button onclick="switchScreen(2)" id="tab-screen2" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
+              <svg class="ic w-3.5 h-3.5"><use href="#i-users"/></svg> 파트너 피드
+            </button>
+          </div>
+
+          <div class="w-full max-w-[330px] aspect-[9/19] bg-slate-950 rounded-[44px] p-3 shadow-phone border-4 border-slate-800 relative">
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 notch bg-slate-950 rounded-full z-20 flex items-center justify-center gap-2">
+              <span class="w-2.5 h-2.5 bg-slate-800 rounded-full"></span>
+              <span class="w-10 h-1.5 bg-slate-800 rounded-full"></span>
+            </div>
+
+            <div class="w-full h-full bg-white rounded-[34px] overflow-hidden flex flex-col relative z-10 select-none">
+
+              <!-- 화면1: 프로필 -->
+              <div id="screen-profile" class="flex-1 flex flex-col h-full pt-7">
+                <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                  <svg class="ic w-3.5 h-3.5 text-slate-500"><use href="#i-chevron-left"/></svg>
+                  <span class="font-bold text-xs text-slate-800">마이 창업 프로필</span>
+                  <span class="text-xs font-bold karrot-color">저장</span>
+                </div>
+                <div class="flex-1 overflow-y-auto px-4 py-3 space-y-4 text-left text-xs">
+                  <div class="flex items-center gap-3 bg-orange-50/60 p-2.5 rounded-xl border border-orange-100">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 border-2 border-orange-200 flex items-center justify-center text-orange-500 font-bold text-sm">길동</div>
+                    <div>
+                      <div class="font-bold text-slate-800">홍길동 <span class="font-normal text-slate-500">(20대)</span></div>
+                      <div class="text-[10px] text-slate-500 flex items-center gap-1"><svg class="ic w-2.5 h-2.5 karrot-color"><use href="#i-pin"/></svg> 서울 마포구 대흥동</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1.5 flex items-center gap-1"><svg class="ic w-3 h-3"><use href="#i-flow"/></svg> 나의 전문 분야 (택1)</label>
+                    <div class="grid grid-cols-3 gap-1.5">
+                      <button onclick="toggleRole(this)" class="p-2 border border-slate-200 rounded-lg text-center bg-slate-50 font-medium hover:border-orange-400 transition-colors">기획/경영</button>
+                      <button onclick="toggleRole(this)" class="p-2 border border-orange-500 rounded-lg text-center bg-orange-50 text-orange-600 font-bold">개발/IT</button>
+                      <button onclick="toggleRole(this)" class="p-2 border border-slate-200 rounded-lg text-center bg-slate-50 font-medium hover:border-orange-400 transition-colors">UI/UX</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1 flex items-center gap-1"><svg class="ic w-3 h-3 karrot-color"><use href="#i-target"/></svg> 나의 동네 인증 (당근 연동)</label>
+                    <div class="space-y-1">
+                      <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <span>🏠 활동지 1 · 마포구 대흥동</span>
+                        <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5"><svg class="ic w-2.5 h-2.5"><use href="#i-check-circle"/></svg> 인증</span>
+                      </div>
+                      <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
+                        <span>🏢 활동지 2 · 서대문구 신촌동</span>
+                        <span class="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5"><svg class="ic w-2.5 h-2.5"><use href="#i-check-circle"/></svg> 인증</span>
+                      </div>
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1 flex items-center gap-1"><svg class="ic w-2.5 h-2.5"><use href="#i-refresh"/></svg> GPS 좌표 대조로 30일마다 갱신됩니다.</span>
+                  </div>
+
+                  <div>
+                    <label class="block font-bold text-slate-700 mb-1.5 flex items-center gap-1"><svg class="ic w-3 h-3 text-yellow-500"><use href="#i-bulb"/></svg> 현재 창업 아이디어 상태</label>
+                    <div class="space-y-1.5">
+                      <label onclick="selectIdea(this)" class="idea-opt flex items-center gap-2 p-2 border border-slate-200 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
+                        <input type="radio" name="idea_status" class="accent-orange-500">
+                        <span>실행 직전의 명확한 BM이 있어요.</span>
+                      </label>
+                      <label onclick="selectIdea(this)" class="idea-opt flex items-center gap-2 p-2 border border-orange-400 rounded-lg cursor-pointer bg-orange-50/40">
+                        <input type="radio" name="idea_status" checked class="accent-orange-500">
+                        <span class="font-bold text-orange-600">아이디어를 가진 리더를 돕고 싶어요.</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="bg-blue-50/60 border border-blue-100 p-2.5 rounded-xl space-y-1.5">
+                    <div class="font-bold text-blue-800 text-[11px] flex items-center justify-between">
+                      <span class="flex items-center gap-1"><svg class="ic w-3 h-3"><use href="#i-award"/></svg> 정부 공인 '도전 경력증명서'</span>
+                      <span class="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded">실시간 연계</span>
+                    </div>
+                    <ul class="space-y-1 text-[10px] text-blue-700">
+                      <li class="flex items-center gap-1.5"><svg class="ic w-2.5 h-2.5 text-blue-600"><use href="#i-check"/></svg> 모두의 창업 1차 라운드 참여이력</li>
+                      <li class="flex items-center gap-1.5"><svg class="ic w-2.5 h-2.5 text-blue-600"><use href="#i-check"/></svg> 17개 시·도 온라인 보완 멘토링 이수</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 화면2: 피드 -->
+              <div id="screen-feed" class="flex-1 flex flex-col h-full pt-7 hidden">
+                <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                  <span class="font-bold text-xs text-slate-800 flex items-center gap-1"><svg class="ic w-3 h-3 karrot-color"><use href="#i-pin"/></svg> 대흥동 주변 파트너</span>
+                  <div class="flex gap-2.5 text-slate-500">
+                    <svg class="ic w-3.5 h-3.5"><use href="#i-search"/></svg>
+                    <svg class="ic w-3.5 h-3.5"><use href="#i-bell"/></svg>
+                  </div>
+                </div>
+
+                <div class="px-3 py-2 bg-slate-50 border-b border-slate-100 text-left">
+                  <div class="flex items-center justify-between text-[10px] text-slate-600 mb-1">
+                    <span>🔍 관심 분야 필터</span>
+                    <span class="text-orange-500 font-bold">전체보기</span>
+                  </div>
+                  <div class="flex gap-1 mb-2 overflow-x-auto pb-1">
+                    <span class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap">#AI추천</span>
+                    <span class="bg-slate-200 text-slate-600 text-[9px] px-2 py-0.5 rounded-full whitespace-nowrap">#이커머스</span>
+                    <span class="bg-slate-200 text-slate-600 text-[9px] px-2 py-0.5 rounded-full whitespace-nowrap">#로컬푸드</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[10px] text-slate-600">
+                    <span>📍 탐색 반경 조절</span>
+                    <span id="radius-val" class="font-bold text-orange-500">5km 이내</span>
+                  </div>
+                  <input type="range" min="1" max="15" value="5" oninput="updateRadius(this.value)" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer mt-1" style="accent-color:var(--karrot)">
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-3 py-2 space-y-2.5 text-left text-[11px]">
+                  <div class="border border-slate-200 rounded-xl p-2.5 bg-white shadow-sm space-y-2 hover:border-orange-300 transition-all">
+                    <div class="flex justify-between items-start">
+                      <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center font-bold text-indigo-600">김</div>
+                        <div>
+                          <div class="font-bold text-slate-800">김개발 <span class="font-normal text-slate-500 text-[9px]">대흥동 1.2km</span></div>
+                          <div class="text-[9px] text-slate-400">개발자 · Python/React</div>
+                        </div>
+                      </div>
+                      <span class="bg-emerald-50 text-emerald-600 text-[8px] font-bold px-1.5 py-0.5 rounded border border-emerald-100 flex items-center gap-0.5"><svg class="ic w-2 h-2"><use href="#i-award"/></svg> 검증</span>
+                    </div>
+                    <div class="text-[10px] text-slate-600 leading-tight bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+                      "식자재 가격비교 AI 플랫폼을 함께할 마케팅·기획 공동창업자를 동네에서 찾습니다."
+                    </div>
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-100">
+                      <span class="text-orange-500 font-bold text-[10px] flex items-center gap-0.5"><svg class="ic w-2.5 h-2.5"><use href="#i-heart"/></svg> AI 궁합도 96%</span>
+                      <button onclick="openChat('김개발')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-[9px] px-2.5 py-1 rounded-lg transition-all shadow-sm">1:1 대화 신청</button>
+                    </div>
+                  </div>
+                  <div class="border border-slate-200 rounded-xl p-2.5 bg-white shadow-sm space-y-2 hover:border-orange-300 transition-all">
+                    <div class="flex justify-between items-start">
+                      <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 bg-rose-100 rounded-full flex items-center justify-center font-bold text-rose-600">이</div>
+                        <div>
+                          <div class="font-bold text-slate-800">이디자인 <span class="font-normal text-slate-500 text-[9px]">신촌동 3.0km</span></div>
+                          <div class="text-[9px] text-slate-400">UI/UX 디자이너 · Figma</div>
+                        </div>
+                      </div>
+                      <span class="bg-emerald-50 text-emerald-600 text-[8px] font-bold px-1.5 py-0.5 rounded border border-emerald-100 flex items-center gap-0.5"><svg class="ic w-2 h-2"><use href="#i-award"/></svg> 검증</span>
+                    </div>
+                    <div class="text-[10px] text-slate-600 leading-tight bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+                      "청소년 기후행동 플랫폼의 모바일 UI/UX 기획·실무를 전담할 수 있습니다."
+                    </div>
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-100">
+                      <span class="text-orange-500 font-bold text-[10px] flex items-center gap-0.5"><svg class="ic w-2.5 h-2.5"><use href="#i-heart"/></svg> AI 궁합도 89%</span>
+                      <button onclick="openChat('이디자인')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-[9px] px-2.5 py-1 rounded-lg transition-all shadow-sm">1:1 대화 신청</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 화면3: 1:1 대화 -->
+              <div id="screen-chat" class="flex-1 flex flex-col h-full pt-7 hidden">
+                <div class="px-3 py-2.5 border-b border-slate-100 flex items-center gap-2 bg-slate-50">
+                  <button onclick="closeChat()" class="text-slate-500 p-0.5"><svg class="ic w-4 h-4"><use href="#i-chevron-left"/></svg></button>
+                  <div id="chat-avatar" class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] bg-indigo-100 text-indigo-600">김</div>
+                  <div class="leading-tight">
+                    <div id="chat-name" class="font-bold text-xs text-slate-800">김개발</div>
+                    <div id="chat-role" class="text-[9px] text-slate-400">개발자 · Python/React</div>
+                  </div>
+                  <span class="ml-auto text-[8px] text-emerald-600 font-bold flex items-center gap-0.5"><svg class="ic w-2 h-2"><use href="#i-award"/></svg> 검증됨</span>
+                </div>
+                <div id="chat-messages" class="flex-1 overflow-y-auto px-3 py-3 space-y-2 bg-slate-50/40"></div>
+                <div class="px-2.5 py-2 border-t border-slate-100 flex items-center gap-2 bg-white">
+                  <div class="flex-1 bg-slate-100 rounded-full px-3 py-1.5 text-[10px] text-slate-400">메시지 입력…</div>
+                  <button class="w-7 h-7 rounded-full karrot-bg text-white flex items-center justify-center shrink-0"><svg class="ic w-3.5 h-3.5"><use href="#i-send"/></svg></button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section id="process" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-5">
+      <div class="max-w-2xl reveal">
+        <span class="text-xs font-bold tracking-widest gov-color uppercase">One-Stop Process</span>
+        <h2 class="mt-3 text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
+          만남에서 끝나지 않습니다
+        </h2>
+        <p class="mt-5 text-slate-600 leading-relaxed">
+          각 단계를 눌러 <strong>스타트업 원스톱 지원센터</strong>와의 행정 연계 구조를 확인해 보세요.
+          매칭 이후의 서류·자문까지 한 흐름으로 이어집니다.
+        </p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 reveal d1">
+        <div onclick="selectStep(1)" id="step-card-1" class="cursor-pointer border-2 border-blue-600 bg-blue-50/30 p-5 rounded-2xl transition-all shadow-soft">
+          <div class="flex justify-between items-center mb-3">
+            <span class="gov-bg text-white text-[10px] px-2 py-0.5 rounded-full font-bold">1단계</span>
+            <svg class="ic w-5 h-5 gov-color"><use href="#i-users"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1">동네 기반 간편 매칭</h3>
+          <p class="text-xs text-slate-500">GPS 좌표 검증 + 성향 기반 매칭</p>
+        </div>
+        <div onclick="selectStep(2)" id="step-card-2" class="cursor-pointer border-2 border-slate-200 bg-slate-50 p-5 rounded-2xl transition-all hover:border-blue-400">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-slate-300 text-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">2단계</span>
+            <svg class="ic w-5 h-5 text-slate-500"><use href="#i-file"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1">서류 자동 생성 (API)</h3>
+          <p class="text-xs text-slate-500">대표·구성원 정보 원클릭 변환</p>
+        </div>
+        <div onclick="selectStep(3)" id="step-card-3" class="cursor-pointer border-2 border-slate-200 bg-slate-50 p-5 rounded-2xl transition-all hover:border-blue-400">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-slate-300 text-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold">3단계</span>
+            <svg class="ic w-5 h-5 text-slate-500"><use href="#i-handshake"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900 text-[15px] mb-1">원스톱 자문단 연계</h3>
+          <p class="text-xs text-slate-500">법률 자문 연간 한도 내 무상 매칭</p>
+        </div>
+      </div>
+
+      <div id="step-detail-box" class="mt-5 bg-slate-50 border border-slate-200 p-6 rounded-2xl text-left reveal d2"></div>
+    </div>
+  </section>
+
+  <!-- ================= IMPACT ================= -->
+  <section id="impact" class="py-20 lg:py-28 gov-bg text-white relative overflow-hidden">
+    <div class="absolute inset-0 grid-lines opacity-10"></div>
+    <div class="relative max-w-6xl mx-auto px-5">
+      <div class="max-w-2xl reveal">
+        <span class="text-xs font-bold tracking-widest text-orange-300 uppercase">Expected Impact</span>
+        <h2 class="mt-3 text-3xl lg:text-4xl font-black leading-tight">
+          「모두의 창업」 도전자에<br>정확히 맞춘 설계입니다
+        </h2>
+        <p class="mt-5 text-blue-100/90 leading-relaxed">
+          청년·지방 비중이 높은 도전자 구성에 맞춰, 지역 기반 매칭으로 정부 보육망의
+          수도권 편중을 구조적으로 보완하는 것을 목표로 합니다.
+        </p>
+      </div>
+
+      <div class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="reveal d1 bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/15">
+          <div class="text-4xl font-black text-white">68%</div>
+          <div class="mt-2 text-sm text-blue-100/90 leading-snug">도전자 중 청년 비중<br><span class="text-[11px] text-blue-200/70">(목표 타깃층)</span></div>
+        </div>
+        <div class="reveal d1 bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/15">
+          <div class="text-4xl font-black text-white">53.4%</div>
+          <div class="mt-2 text-sm text-blue-100/90 leading-snug">지방 거주자 비중<br><span class="text-[11px] text-blue-200/70">(지역 매칭 수요)</span></div>
+        </div>
+        <div class="reveal d2 bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/15">
+          <div class="text-4xl font-black text-white">10<span class="text-xl">초</span></div>
+          <div class="mt-2 text-sm text-blue-100/90 leading-snug">서류 자동 생성·접수<br><span class="text-[11px] text-blue-200/70">(기존 약 3일 → 즉시)</span></div>
+        </div>
+        <div class="reveal d2 bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/15">
+          <div class="text-4xl font-black text-white">+150<span class="text-xl">%</span></div>
+          <div class="mt-2 text-sm text-blue-100/90 leading-snug">협업 생태계 활성화<br><span class="text-[11px] text-blue-200/70">(기대 목표치)</span></div>
+        </div>
+      </div>
+
+      <p class="mt-8 text-[12px] text-blue-200/70 reveal">
+        ※ 위 수치는 제안 목표 및 기대치로, 실제 운영 데이터와 다를 수 있습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="py-20 lg:py-24 bg-white">
+    <div class="max-w-3xl mx-auto px-5 text-center reveal">
+      <h2 class="text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
+        혼자 시작하지 않게,<br><span class="karrot-color">모두의 링크</span>가 잇겠습니다
+      </h2>
+      <p class="mt-5 text-slate-600 leading-relaxed">
+        동네에서 만나고, 정부가 보증하고, 행정까지 한 번에.<br>
+        「모두의 창업」을 한 단계 더 단단하게 만드는 제안입니다.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <button onclick="scrollToId('demo')" class="karrot-bg hover:bg-[var(--karrot-dark)] text-white font-bold px-6 py-3.5 rounded-xl shadow-soft transition-colors">서비스 다시 보기</button>
+        <button onclick="goTop()" class="bg-white hover:bg-slate-50 text-slate-800 font-bold px-6 py-3.5 rounded-xl border border-slate-200 transition-colors">맨 위로</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-slate-900 text-slate-400 py-12 px-5">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg karrot-bg flex items-center justify-center text-white"><svg class="ic w-3 h-3"><use href="#i-link"/></svg></span>
+      <span class="font-bold text-white text-sm">모두의 링크 · Modoo Link</span>
+    </div>
+    <div class="text-center">본 페이지는 중소벤처기업부 「모두의 창업」 고도화 아이디어 제안 과제 문서입니다.</div>
+    <div>© 2026 Modoo Link Project</div>
+  </div>
+</footer>
+
+<script>
+  /* 페이지 내 스크롤 이동 (URL 이동 아님) */
+  function scrollToId(id){
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  function goTop(){
+    // 1) 가능한 모든 기본 스크롤 컨테이너를 직접 맨 위로
+    [document.scrollingElement, document.documentElement, document.body].forEach(el=>{
+      if(!el) return;
+      try{ el.scrollTo ? el.scrollTo({ top:0, behavior:'smooth' }) : (el.scrollTop = 0); }
+      catch(e){ try{ el.scrollTop = 0; }catch(_){} }
+    });
+    try{ window.scrollTo({ top:0, behavior:'smooth' }); }catch(e){}
+    // 2) 커스텀 스크롤 래퍼가 있으면 위로 거슬러 올라가며 찾아서 0으로
+    let el = document.getElementById('hero');
+    while(el && el.parentElement){
+      el = el.parentElement;
+      if(el.scrollHeight > el.clientHeight + 4){
+        const oy = getComputedStyle(el).overflowY;
+        if(oy === 'auto' || oy === 'scroll' || el === document.scrollingElement){
+          try{ el.scrollTo ? el.scrollTo({ top:0, behavior:'smooth' }) : (el.scrollTop = 0); }
+          catch(e){ try{ el.scrollTop = 0; }catch(_){} }
+        }
+      }
+    }
+  }
+
+  /* 화면 전환 */
+  function switchScreen(n){
+    const p = document.getElementById('screen-profile');
+    const f = document.getElementById('screen-feed');
+    const c = document.getElementById('screen-chat');
+    const t1 = document.getElementById('tab-screen1');
+    const t2 = document.getElementById('tab-screen2');
+    const on  = "flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1";
+    const off = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1";
+    c.classList.add('hidden');
+    if(n===1){ p.classList.remove('hidden'); f.classList.add('hidden'); t1.className=on; t2.className=off; }
+    else     { p.classList.add('hidden');    f.classList.remove('hidden'); t1.className=off; t2.className=on; }
+  }
+
+  /* 아이디어 상태 라디오 선택 시 하이라이트 이동 */
+  function selectIdea(label){
+    const base   = "idea-opt flex items-center gap-2 p-2 border border-slate-200 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors";
+    const active = "idea-opt flex items-center gap-2 p-2 border border-orange-400 rounded-lg cursor-pointer bg-orange-50/40";
+    label.parentElement.querySelectorAll('.idea-opt').forEach(l=>{
+      l.className = base;
+      const s = l.querySelector('span'); if(s) s.className = "";
+    });
+    label.className = active;
+    const s = label.querySelector('span'); if(s) s.className = "font-bold text-orange-600";
+    const r = label.querySelector('input[type=radio]'); if(r) r.checked = true;
+  }
+
+  /* 역할 선택 */
+  function toggleRole(btn){
+    btn.parentElement.querySelectorAll('button').forEach(b=>{
+      b.className = "p-2 border border-slate-200 rounded-lg text-center bg-slate-50 font-medium hover:border-orange-400 transition-colors";
+    });
+    btn.className = "p-2 border border-orange-500 rounded-lg text-center bg-orange-50 text-orange-600 font-bold";
+  }
+
+  /* 반경 슬라이더 */
+  function updateRadius(v){ document.getElementById('radius-val').innerText = `${v}km 이내`; }
+
+  /* 1:1 대화 — 예시 대화 데이터 */
+  const chats = {
+    '김개발': {
+      initial:'김', avatarClass:'bg-indigo-100 text-indigo-600', role:'개발자 · Python/React',
+      msgs:[
+        { who:'them', text:'안녕하세요! 프로필 보고 연락드려요. 식자재 가격비교 AI 플랫폼 같이 만들 분을 찾고 있어요 🙂' },
+        { who:'me',   text:'안녕하세요 김개발님! 마침 그 분야에 관심 있었어요. 지금 어느 단계까지 와 있나요?' },
+        { who:'them', text:'MVP 기획은 끝났고 데이터 수집 로직까지 짜뒀어요. 마케팅·기획을 같이 끌어줄 공동창업자가 필요해서요.' },
+        { who:'me',   text:'좋네요. 1차 타깃은 자영업자 위주인가요?' },
+        { who:'them', text:'네, 우선 소상공인 식당이요. 원가 절감 니즈가 확실하더라고요.' },
+        { who:'me',   text:'동네도 가까우니 이번 주에 한번 뵙고 더 얘기해요. 도전 경력증명서도 봤는데 믿음이 가네요 👍' },
+        { who:'them', text:'좋아요! 목요일 저녁 대흥동 카페 어떠세요?' }
+      ]
+    },
+    '이디자인': {
+      initial:'이', avatarClass:'bg-rose-100 text-rose-600', role:'UI/UX 디자이너 · Figma',
+      msgs:[
+        { who:'them', text:'안녕하세요! 청소년 기후행동 플랫폼 UI/UX 맡아줄 사람 찾으시면 제가 잘 맞을 것 같아요 🙂' },
+        { who:'me',   text:'안녕하세요 이디자인님! 포트폴리오 인상적이었어요. 모바일 위주로 생각 중인데 가능하실까요?' },
+        { who:'them', text:'그럼요, 모바일 퍼스트로 작업해요. 청소년 타깃이면 직관적이고 트렌디한 톤이 중요하겠네요.' },
+        { who:'me',   text:'맞아요. 특히 온보딩이 고민이에요. 진입장벽 낮추는 게 핵심이라.' },
+        { who:'them', text:'게이미피케이션 요소를 살짝 넣어 풀어볼 수 있어요. 레퍼런스 정리해서 보여드릴게요.' },
+        { who:'me',   text:'좋네요! 신촌이면 멀지 않으니 주말에 만나서 화면 같이 그려봐요.' },
+        { who:'them', text:'콜! 토요일 오후 어떠세요?' }
+      ]
+    }
+  };
+
+  function openChat(name){
+    const c = chats[name];
+    if(!c) return;
+    document.getElementById('screen-profile').classList.add('hidden');
+    document.getElementById('screen-feed').classList.add('hidden');
+    document.getElementById('screen-chat').classList.remove('hidden');
+
+    document.getElementById('chat-name').innerText = name;
+    document.getElementById('chat-role').innerText = c.role;
+    const av = document.getElementById('chat-avatar');
+    av.className = 'w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] ' + c.avatarClass;
+    av.innerText = c.initial;
+
+    const bubbleMe   = 'max-w-[78%] bg-orange-500 text-white text-[10px] leading-snug px-2.5 py-1.5 rounded-2xl rounded-br-sm';
+    const bubbleThem = 'max-w-[78%] bg-white border border-slate-200 text-slate-700 text-[10px] leading-snug px-2.5 py-1.5 rounded-2xl rounded-bl-sm';
+    const box = document.getElementById('chat-messages');
+    box.innerHTML =
+      c.msgs.map(m => m.who === 'me'
+        ? `<div class="flex justify-end"><div class="${bubbleMe}">${m.text}</div></div>`
+        : `<div class="flex justify-start"><div class="${bubbleThem}">${m.text}</div></div>`
+      ).join('') +
+      `<div class="text-center text-[8px] text-slate-400 pt-1">— 예시 대화입니다 —</div>`;
+    box.scrollTop = 0;
+  }
+
+  function closeChat(){
+    document.getElementById('screen-chat').classList.add('hidden');
+    document.getElementById('screen-feed').classList.remove('hidden');
+  }
+
+  /* 단계 상세 데이터 */
+  const stepDetails = {
+    1:{
+      badge:"1단계 세부 프로세스",
+      title:"동네 기반 간편 팀 매칭 (당근 LBS × YC 하이브리드)",
+      leftHTML:`
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 karrot-color"><use href="#i-target"/></svg> 지역 한계 극복 (당근 LBS)</h5>
+          <p>내 활동지 반경으로 검색 범위를 조절해, 가까운 거리의 실무 동업자를 우선 매칭합니다. 거리로 인한 소통 단절을 줄입니다.</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 gov-color"><use href="#i-fingerprint"/></svg> 허위 이력 사전 차단</h5>
+          <p>정부 <strong>도전 경력증명서</strong> 데이터와 신원 인증 API를 연계해, 허위 경력과 어뷰징 계정을 매칭 단계에서 걸러냅니다.</p>
+        </div>`,
+      rightText:"도전자 구성에서 청년 비중이 68%, 지방 거주자가 53.4%를 차지하는 「모두의 창업」 특성에 맞춘 지역 매칭 UI로, 정부 보육망의 수도권 편중을 구조적으로 보완합니다.",
+      metricLabel:"협업 생태계 활성화 목표",
+      metricVal:"+150% (기대 목표치)"
+    },
+    2:{
+      badge:"2단계 세부 프로세스",
+      title:"서류 자동 생성 및 API 즉시 전송",
+      leftHTML:`
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 gov-color"><use href="#i-sparkles"/></svg> 원클릭 서류 완성</h5>
+          <p>자문신청서·창업기업확인서·개인정보동의서를 시스템이 자동으로 채워 생성합니다. 반복 작성 부담을 없앱니다.</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 karrot-color"><use href="#i-server"/></svg> API 연계 행정 처리</h5>
+          <p>K-Startup 포털과 보안 API로 통신해, 작성된 서류가 별도 업로드 없이 창업진흥원 전산망으로 안전하게 전송됩니다.</p>
+        </div>`,
+      rightText:"복잡한 행정 서류 부담을 크게 줄여, 극초기 기술창업팀이 제품 기획과 소통에 집중할 수 있는 여건을 제공합니다.",
+      metricLabel:"서류 구비·접수 소요 시간",
+      metricVal:"기존 약 3일 → 즉시(10초)"
+    },
+    3:{
+      badge:"3단계 세부 프로세스",
+      title:"스타트업 원스톱 지원센터 자문단 연계",
+      leftHTML:`
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 text-emerald-600"><use href="#i-scale"/></svg> 지분 갈등 예방</h5>
+          <p>매칭 완료 즉시 법률 자문이 배정되어, '공동창업 주주 간 계약서' 설계 등 분쟁을 예방하는 계약 체결을 돕습니다.</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+          <h5 class="font-bold text-slate-800 mb-1 flex items-center gap-1.5"><svg class="ic w-3.5 h-3.5 text-amber-500"><use href="#i-coins"/></svg> 정부 예산 내 무상 지원</h5>
+          <p>스타트업 원스톱 지원센터의 기존 심층 자문 예산(기업당 연간 300만원 한도)을 연계해, 별도 추가 비용 없이 제공합니다.</p>
+        </div>`,
+      rightText:"팀 빌딩 직후 흔한 '동업 결렬'과 '규제 저촉' 리스크를 변호사·노무사·세무사 자문단이 사전 점검해, 초기 창업 생존율을 높입니다.",
+      metricLabel:"초기 동업·지분 계약 검토",
+      metricVal:"한도 내 무상 케어 제공"
+    }
+  };
+
+  function selectStep(n){
+    for(let i=1;i<=3;i++){
+      const c = document.getElementById(`step-card-${i}`);
+      c.className = (i===n)
+        ? "cursor-pointer border-2 border-blue-600 bg-blue-50/30 p-5 rounded-2xl transition-all shadow-soft"
+        : "cursor-pointer border-2 border-slate-200 bg-slate-50 p-5 rounded-2xl transition-all hover:border-blue-400";
+    }
+    const d = stepDetails[n];
+    document.getElementById('step-detail-box').innerHTML = `
+      <div class="flex flex-wrap items-center gap-2.5 border-b border-slate-200 pb-3 mb-4">
+        <span class="gov-bg text-white text-xs px-2.5 py-1 rounded-full font-bold">${d.badge}</span>
+        <h3 class="font-black text-slate-900 text-base">${d.title}</h3>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-slate-600">
+        ${d.leftHTML}
+      </div>`;
+  }
+  selectStep(1);
+
+  /* 스크롤 등장 */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold:0.12 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
